@@ -53,7 +53,5 @@ public class MemberJpaRepositoryTest {
         memberJpaRepository.delete(m1);
         memberJpaRepository.delete(m2);
         assertEquals(memberJpaRepository.findAll().size(), 0);
-
-
     }
 }

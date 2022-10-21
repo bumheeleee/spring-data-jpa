@@ -33,4 +33,29 @@ class MemberRepositoryTest {
         assertEquals(member, findMember);
     }
 
+    @Test
+    public void testCRUD() {
+        Member m1 = new Member("a");
+        Member m2 = new Member("b");
+        memberRepository.save(m1);
+        memberRepository.save(m2);
+        Member findm1 = memberRepository.findById(m1.getId()).get();
+        Member findm2 = memberRepository.findById(m2.getId()).get();
+
+        //단건 조회 검증
+        assertEquals(m1, findm1);
+        assertEquals(m2, findm2);
+
+        //findAll 조회 검증
+        assertEquals(memberRepository.findAll().size(), 2);
+
+        //카운트 검증
+        assertEquals(memberRepository.count(), 2);
+
+        //삭제 검증
+        memberRepository.delete(m1);
+        memberRepository.delete(m2);
+        assertEquals(memberRepository.findAll().size(), 0);
+    }
+
 }
