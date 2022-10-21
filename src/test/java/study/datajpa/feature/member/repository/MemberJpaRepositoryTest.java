@@ -29,4 +29,31 @@ public class MemberJpaRepositoryTest {
         assertEquals(savedMember, findMember);
         assertEquals(member, findMember);
     }
+
+    @Test
+    public void testCRUD() {
+        Member m1 = new Member("a");
+        Member m2 = new Member("b");
+        memberJpaRepository.save(m1);
+        memberJpaRepository.save(m2);
+        Member findm1 = memberJpaRepository.findById(m1.getId()).get();
+        Member findm2 = memberJpaRepository.findById(m2.getId()).get();
+
+        //단건 조회 검증
+        assertEquals(m1, findm1);
+        assertEquals(m2, findm2);
+
+        //findAll 조회 검증
+        assertEquals(memberJpaRepository.findAll().size(), 2);
+
+        //카운트 검증
+        assertEquals(memberJpaRepository.count(), 2);
+
+        //삭제 검증
+        memberJpaRepository.delete(m1);
+        memberJpaRepository.delete(m2);
+        assertEquals(memberJpaRepository.findAll().size(), 0);
+
+
+    }
 }
