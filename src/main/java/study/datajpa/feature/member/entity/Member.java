@@ -16,10 +16,14 @@ public class Member {
 
     private String username;
 
-    public Member() {
+    protected Member() {
     }
 
     public Member(String username) {
         this.username = username;
+    }
+
+    public void changeUserid(Long id){
+        this.id = id;
     }
 }
