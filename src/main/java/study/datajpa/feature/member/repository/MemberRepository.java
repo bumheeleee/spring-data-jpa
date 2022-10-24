@@ -7,17 +7,24 @@ import study.datajpa.feature.member.dto.MemberDto;
 import study.datajpa.feature.member.entity.Member;
 
 import java.util.List;
+import java.util.Optional;
 
 //@Repository를 생략이 가능
 public interface MemberRepository extends JpaRepository<Member, Long> {
     @Query("select m from Member m where m.username = :username and m.age = :age")
-    public List<Member> findUser(
+    List<Member> findUser(
             @Param("username") String username,
             @Param("age") int age
     );
     @Query("select new study.datajpa.feature.member.dto.MemberDto(m.id, m.username, t.name) from Member m join m.team t")
-    public List<MemberDto> findMemberDto();
+    List<MemberDto> findMemberDto();
 
     @Query("select m from Member m where m.username in :names")
-    public List<Member> findByUsernames(@Param("names") List<String> names);
+    List<Member> findByUsernames(@Param("names") List<String> names);
+
+    List<Member> findListByUsername(String name); //컬렉션 Member findByUsername(String name); //단건
+
+    Member findMemberByUsername(String name); //단건
+
+    Optional<Member> findOptionalByUsername(String name); //단건 Optional
 }

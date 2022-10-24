@@ -11,7 +11,9 @@ import study.datajpa.feature.member.entity.Team;
 import javax.transaction.Transactional;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -119,15 +121,35 @@ class MemberRepositoryTest {
         memberRepository.save(m3);
         memberRepository.save(m4);
 
-        List<String> names = new ArrayList<>();
-        names.add("a");
-        names.add("b");
-        names.add("c");
-        names.add("d");
-        
-        List<Member> entity = memberRepository.findByUsernames(names);
+        List<Member> entity = memberRepository.findByUsernames(Arrays.asList("a", "b", "c", "d"));
         for (Member member : entity) {
             System.out.println("member = " + member);
         }
+    }
+
+    @Test
+    public void testReturnType() {
+        Member m1 = new Member("a", 15);
+        Member m2 = new Member("b", 20);
+        Member m3 = new Member("c", 25);
+        Member m4 = new Member("d", 30);
+        memberRepository.save(m1);
+        memberRepository.save(m2);
+        memberRepository.save(m3);
+        memberRepository.save(m4);
+
+        List<Member> result = memberRepository.findListByUsername("asdfa");
+        // result.size = 0, null이 아니다!!(중요)
+        System.out.println("result = " + result.size());
+
+
+        Member b = memberRepository.findMemberByUsername("bsafas");
+        // b = null
+        System.out.println("b = " + b);
+
+        Optional<Member> c = memberRepository.findOptionalByUsername("csfas");
+        // c = Optional.empty
+        System.out.println("c = " + c);
+
     }
 }
