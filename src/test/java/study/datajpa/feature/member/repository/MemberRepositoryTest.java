@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
+import study.datajpa.feature.member.dto.MemberDto;
 import study.datajpa.feature.member.entity.Member;
 import study.datajpa.feature.member.entity.Team;
 
@@ -15,10 +16,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
-@Rollback(value = false)
+@Rollback(value = true)
 class MemberRepositoryTest {
-
-
     @Autowired
     public MemberRepository memberRepository;
     @Autowired
@@ -66,7 +65,6 @@ class MemberRepositoryTest {
     public void testQuery() {
         Team t1 = new Team("t1");
         Team t2 = new Team("t2");
-
         teamRepository.save(t1);
         teamRepository.save(t2);
 
@@ -81,4 +79,26 @@ class MemberRepositoryTest {
         assertEquals(m1.getAge(), result.get(0).getAge());
     }
 
+
+    @Test
+    public void testFindMemberDto() {
+        Team t1 = new Team("t1");
+        Team t2 = new Team("t2");
+
+        teamRepository.save(t1);
+        teamRepository.save(t2);
+
+        Member m1 = new Member("a", 15, t1);
+        Member m2 = new Member("b", 20, t2);
+        memberRepository.save(m1);
+        memberRepository.save(m2);
+
+        List<MemberDto> memberDto = memberRepository.findMemberDto();
+
+        for (MemberDto dto : memberDto) {
+            System.out.println("dto.getId() = " + dto.getId());
+            System.out.println("dto.getUsername() = " + dto.getUsername());
+            System.out.println("dto.getTeamName() = " + dto.getTeamName());
+        }
+    }
 }
