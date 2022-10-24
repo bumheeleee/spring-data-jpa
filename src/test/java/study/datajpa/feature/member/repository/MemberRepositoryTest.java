@@ -10,6 +10,7 @@ import study.datajpa.feature.member.entity.Team;
 
 import javax.transaction.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -99,6 +100,34 @@ class MemberRepositoryTest {
             System.out.println("dto.getId() = " + dto.getId());
             System.out.println("dto.getUsername() = " + dto.getUsername());
             System.out.println("dto.getTeamName() = " + dto.getTeamName());
+        }
+    }
+
+    @Test
+    public void testFindByUsernames() {
+        Team t1 = new Team("t1");
+        Team t2 = new Team("t2");
+        teamRepository.save(t1);
+        teamRepository.save(t2);
+
+        Member m1 = new Member("a", 15, t1);
+        Member m2 = new Member("b", 20, t2);
+        Member m3 = new Member("c", 25, t1);
+        Member m4 = new Member("d", 30, t2);
+        memberRepository.save(m1);
+        memberRepository.save(m2);
+        memberRepository.save(m3);
+        memberRepository.save(m4);
+
+        List<String> names = new ArrayList<>();
+        names.add("a");
+        names.add("b");
+        names.add("c");
+        names.add("d");
+        
+        List<Member> entity = memberRepository.findByUsernames(names);
+        for (Member member : entity) {
+            System.out.println("member = " + member);
         }
     }
 }
