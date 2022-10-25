@@ -7,6 +7,8 @@ import org.springframework.test.annotation.Rollback;
 import study.datajpa.feature.member.entity.Member;
 
 import javax.transaction.Transactional;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -36,12 +38,12 @@ public class MemberJpaRepositoryTest {
         Member m2 = new Member("b");
         memberJpaRepository.save(m1);
         memberJpaRepository.save(m2);
-        Member findm1 = memberJpaRepository.findById(m1.getId()).get();
-        Member findm2 = memberJpaRepository.findById(m2.getId()).get();
+        Member findM1 = memberJpaRepository.findById(m1.getId()).get();
+        Member findM2 = memberJpaRepository.findById(m2.getId()).get();
 
         //단건 조회 검증
-        assertEquals(m1, findm1);
-        assertEquals(m2, findm2);
+        assertEquals(m1, findM1);
+        assertEquals(m2, findM2);
 
         //findAll 조회 검증
         assertEquals(memberJpaRepository.findAll().size(), 2);
@@ -53,5 +55,30 @@ public class MemberJpaRepositoryTest {
         memberJpaRepository.delete(m1);
         memberJpaRepository.delete(m2);
         assertEquals(memberJpaRepository.findAll().size(), 0);
+    }
+
+    @Test
+    public void testPage(){
+        //given
+        memberJpaRepository.save(new Member("m1", 10));
+        memberJpaRepository.save(new Member("m2", 10));
+        memberJpaRepository.save(new Member("m3", 10));
+        memberJpaRepository.save(new Member("m4", 10));
+        memberJpaRepository.save(new Member("m5", 10));
+
+        int age = 10;
+        int offset = 0;
+        int limit = 3;
+
+        //when
+        List<Member> members = memberJpaRepository.findByPage(age, offset, limit);
+        long totalCount = memberJpaRepository.totalCount(age);
+
+        //then
+        assertEquals(totalCount, 5);
+        assertEquals(members.size(), 3);
+        for (Member member : members) {
+            System.out.println("member = " + member);
+        }
     }
 }
