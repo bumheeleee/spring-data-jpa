@@ -3,6 +3,9 @@ package study.datajpa.feature.member.repository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.annotation.Rollback;
 import study.datajpa.feature.member.dto.MemberDto;
 import study.datajpa.feature.member.entity.Member;
@@ -150,6 +153,35 @@ class MemberRepositoryTest {
         Optional<Member> c = memberRepository.findOptionalByUsername("csfas");
         // c = Optional.empty
         System.out.println("c = " + c);
+
+    }
+
+    @Test
+    public void testPage(){
+        //given
+        memberRepository.save(new Member("m1", 10));
+        memberRepository.save(new Member("m2", 10));
+        memberRepository.save(new Member("m3", 10));
+        memberRepository.save(new Member("m4", 10));
+        memberRepository.save(new Member("m5", 10));
+
+        int age = 10;
+        PageRequest pageRequest = PageRequest.of(0, 3, Sort.by(Sort.Direction.DESC, "username"));
+
+        //when
+        Page<Member> page = memberRepository.findByAge(age, pageRequest);
+
+        // entity -> dto로 변환
+        Page<MemberDto> memberDtos = page.map(m -> new MemberDto(m.getId(), m.getUsername(), null));
+
+        //then
+        long totalElements = page.getTotalElements();
+        List<Member> members = page.getContent();
+
+        assertEquals(totalElements, 5);
+        assertEquals(members.size(), 3);
+
+        System.out.println("members = " + members);
 
     }
 }
