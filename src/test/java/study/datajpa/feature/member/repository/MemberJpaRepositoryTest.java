@@ -81,4 +81,20 @@ public class MemberJpaRepositoryTest {
             System.out.println("member = " + member);
         }
     }
+
+    @Test
+    public void testBulkAge(){
+        //given
+        memberJpaRepository.save(new Member("m1", 10));
+        memberJpaRepository.save(new Member("m2", 15));
+        memberJpaRepository.save(new Member("m3", 20));
+        memberJpaRepository.save(new Member("m4", 25));
+        memberJpaRepository.save(new Member("m5", 30));
+
+        //when
+        int resultCount = memberJpaRepository.bulkAgePlus(20);
+
+        //then
+        assertEquals(resultCount, 3);
+    }
 }
