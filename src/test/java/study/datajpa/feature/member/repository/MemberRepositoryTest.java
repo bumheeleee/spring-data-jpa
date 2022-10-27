@@ -11,24 +11,24 @@ import study.datajpa.feature.member.dto.MemberDto;
 import study.datajpa.feature.member.entity.Member;
 import study.datajpa.feature.member.entity.Team;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
-@Rollback(value = true)
+@Rollback(value = false)
 class MemberRepositoryTest {
     @Autowired
     public MemberRepository memberRepository;
     @Autowired
     public TeamRepository teamRepository;
 
+    @PersistenceContext EntityManager em;
     @Test
     public void testMember(){
         System.out.println("memberRepository.getClass() = " + memberRepository.getClass());
@@ -182,6 +182,23 @@ class MemberRepositoryTest {
         assertEquals(members.size(), 3);
 
         System.out.println("members = " + members);
+
+    }
+
+    @Test
+    public void testBulkAge(){
+        //given
+        memberRepository.save(new Member("m1", 10));
+        memberRepository.save(new Member("m2", 15));
+        memberRepository.save(new Member("m3", 20));
+        memberRepository.save(new Member("m4", 25));
+        memberRepository.save(new Member("m5", 30));
+
+        //when
+        int resultCount = memberRepository.bulkAgePlus(20);
+
+        //then
+        assertEquals(resultCount, 3);
 
     }
 }
