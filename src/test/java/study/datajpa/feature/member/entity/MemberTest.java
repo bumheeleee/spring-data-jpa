@@ -1,8 +1,10 @@
 package study.datajpa.feature.member.entity;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
+import study.datajpa.feature.member.repository.MemberJpaRepository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -17,6 +19,9 @@ class MemberTest {
 
     @PersistenceContext
     public EntityManager em;
+
+    @Autowired
+    public MemberJpaRepository memberJpaRepository;
 
     @Test
     public void testMember(){
@@ -52,5 +57,31 @@ class MemberTest {
         }
     }
 
+    @Test
+    public void testCollection(){
+        Team teamA = new Team("teamA");
+        Team teamB = new Team("teamB");
+        em.persist(teamA);
+        em.persist(teamB);
+
+        Member member1 = new Member("memberName1", 10, teamA);
+        Member member2 = new Member("memberName2", 20, teamA);
+        Member member3 = new Member("memberName3", 10, teamB);
+        Member member4 = new Member("memberName4", 20, teamB);
+
+        em.persist(member1);
+        em.persist(member2);
+        em.persist(member3);
+        em.persist(member4);
+
+        //초기화
+        em.flush();
+        em.clear();
+
+        List<String> strings = memberJpaRepository.collectionJoin();
+        for (String string : strings) {
+            System.out.println("string = " + string);
+        }
+    }
 
 }

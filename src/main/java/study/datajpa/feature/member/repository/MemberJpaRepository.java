@@ -64,4 +64,9 @@ public class MemberJpaRepository {
         return resultCount;
     }
 
+    public List<String> collectionJoin(){
+        List<String> resultList = em.createQuery("select m.username from Team t join t.members m ", String.class)
+                .getResultList();
+        return resultList;
+    }
 }
