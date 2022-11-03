@@ -285,4 +285,20 @@ class MemberRepositoryTest {
         //then
 
     }
+
+    @Test
+    @Rollback(value = false)
+    public void callCustom(){
+        Member m1 = memberRepository.save(new Member("m1", 10));
+        Member m2 = memberRepository.save(new Member("m2", 15));
+        Member m3 = memberRepository.save(new Member("m3", 20));
+        Member m4 = memberRepository.save(new Member("m4", 25));
+        Member m5 = memberRepository.save(new Member("m5", 30));
+
+        List<Member> result = memberRepository.findMemberCustom();
+
+        for (Member member : result) {
+            System.out.println("member = " + member);
+        }
+    }
 }

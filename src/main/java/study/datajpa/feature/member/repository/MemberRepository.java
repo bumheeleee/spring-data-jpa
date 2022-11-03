@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 //@Repository를 생략이 가능
-public interface MemberRepository extends JpaRepository<Member, Long> {
+public interface MemberRepository extends JpaRepository<Member, Long>, MemberRepositoryCustom{
     @Query("select m from Member m where m.username = :username and m.age = :age")
     List<Member> findUser(
             @Param("username") String username,
