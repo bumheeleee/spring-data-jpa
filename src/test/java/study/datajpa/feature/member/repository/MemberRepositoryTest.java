@@ -217,11 +217,38 @@ class MemberRepositoryTest {
         assertEquals(m4_new.getAge(), 25);
         assertEquals(m5_new.getAge(), 30);
         assertEquals(i, 3);
+    }
 
-//        assertEquals(m3.getAge(), 20);
-//        assertEquals(m4.getAge(), 25);
-//        assertEquals(m5.getAge(), 30);
-//        assertEquals(i, 3);
+    @Test
+    public void findMemberLazy(){
+        //given
+        //member1 -> teamA
+        //member2 -> teamB
+        Team teamA = new Team("teamA");
+        Team teamB = new Team("teamB");
+        teamRepository.save(teamA);
+        teamRepository.save(teamB);
 
+        memberRepository.save(new Member("member1", 10, teamA));
+        memberRepository.save(new Member("member2", 20, teamB));
+
+        //영속성 컨텍스트에 있는 값을 비워준다.
+        em.flush();
+        em.clear();
+
+        //when
+        //새로 가져온다.
+        List<Member> members = memberRepository.findAll();
+
+        //fetch join을 통한 (n+1)문제를 해결하는 한방 쿼리를 보여준다.
+        //List<Member> members = memberRepository.findMembersAll();
+
+        //then
+        //지연로딩 전략 때문에 members에서 연관된 team을 찾을때마다 쿼리가 나간다. (n+1)문제
+        for (Member member : members) {
+            System.out.println("member.getUsername() = " + member.getUsername());
+            System.out.println("member.getTeam().getClass() = " + member.getTeam().getClass());
+            System.out.println("member.getTeam() = " + member.getTeam().getName());
+        }
     }
 }
