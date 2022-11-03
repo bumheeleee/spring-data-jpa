@@ -251,4 +251,38 @@ class MemberRepositoryTest {
             System.out.println("member.getTeam() = " + member.getTeam().getName());
         }
     }
+
+    @Test
+    @Rollback(value = false)
+    public void queryHint() throws Exception {
+        //given
+        Member member1 = new Member("member1", 10);
+        memberRepository.save(member1);
+
+        em.flush();
+        em.clear();
+
+        //when
+        //변경감지 예시
+//        Optional<Member> findMember = memberRepository.findById(member1.getId());
+//
+//        if (findMember.isPresent()){
+//            findMember.get().setUsername("lee");
+//        }else {
+//            throw new Exception();
+//        }
+
+        //변경감지를 하지 않지만 find를 하게되면 낭비되는 메모리가 발생, 따라서 readOnly로 설정
+        //하지만 많이 사용하지는 않는다. 성능에 막대한 영향을 미치지 않기 때문이다.
+        Member findMember = memberRepository.findReadOnlyByUsername(member1.getUsername());
+        findMember.setUsername("member2");
+
+        //flush를 해줘야한다. 앞에서 해줬기 때문에
+        //사실 변경만 한다고 바로 쿼리가 나가지 않고 flush를 해야 변경감지 통해 쿼리가 나간다.
+        em.flush();
+
+
+        //then
+
+    }
 }
