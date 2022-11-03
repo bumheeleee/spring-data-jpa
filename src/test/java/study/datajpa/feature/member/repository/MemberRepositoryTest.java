@@ -21,12 +21,15 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
-@Rollback(value = false)
+@Rollback(value = true)
 class MemberRepositoryTest {
     @Autowired
     public MemberRepository memberRepository;
     @Autowired
     public TeamRepository teamRepository;
+
+    @Autowired
+    public MemberJpaRepository memberJpaRepository;
 
     @PersistenceContext EntityManager em;
     @Test
@@ -188,17 +191,37 @@ class MemberRepositoryTest {
     @Test
     public void testBulkAge(){
         //given
-        memberRepository.save(new Member("m1", 10));
-        memberRepository.save(new Member("m2", 15));
-        memberRepository.save(new Member("m3", 20));
-        memberRepository.save(new Member("m4", 25));
-        memberRepository.save(new Member("m5", 30));
+        //transaction commit 시점이 아니기 때문에 일단 영속성 context에는 값이 올라간다.
+        Member m1 = memberRepository.save(new Member("m1", 10));
+        Member m2 = memberRepository.save(new Member("m2", 15));
+        Member m3 = memberRepository.save(new Member("m3", 20));
+        Member m4 = memberRepository.save(new Member("m4", 25));
+        Member m5 = memberRepository.save(new Member("m5", 30));
 
         //when
-        int resultCount = memberRepository.bulkAgePlus(20);
+        //query가 직접 나가는 시점이기 때문에 flush 호출(영속성 컨텍스트에 값이 db에 반영) -> 이때 진짜 쿼리가 나감
+        //1. 상태 db : 10, 15, 20, 25, 30이 저장이된다.
+        //2. bulk 업데이트로 db에 직접 값이 반영 (db : 21, 26, 31 || 영속성 컨텍스트 : 20, 25, 30)
+        int i = memberJpaRepository.bulkAgePlus(20);
 
         //then
-        assertEquals(resultCount, 3);
+        //영속성 컨텍스트에 값을 가져와서 테스트를 통화하게 된다.
+        //따라서 되게 중요한 부분은!!!! -> 벌크 업데이트를 하게되면 영속성 context를 비워주기!
+//        em.flush();
+//        em.clear();
+        Member m3_new = memberRepository.findMemberByUsername("m3");
+        Member m4_new = memberRepository.findMemberByUsername("m4");
+        Member m5_new = memberRepository.findMemberByUsername("m5");
+
+        assertEquals(m3_new.getAge(), 20);
+        assertEquals(m4_new.getAge(), 25);
+        assertEquals(m5_new.getAge(), 30);
+        assertEquals(i, 3);
+
+//        assertEquals(m3.getAge(), 20);
+//        assertEquals(m4.getAge(), 25);
+//        assertEquals(m5.getAge(), 30);
+//        assertEquals(i, 3);
 
     }
 }
