@@ -1,8 +1,7 @@
 package study.datajpa.feature.member.entity;
 
 import lombok.*;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ExceptionHandler;
+import study.datajpa.feature.team.entity.Team;
 
 import javax.persistence.*;
 

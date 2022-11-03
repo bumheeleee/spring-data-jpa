@@ -1,8 +1,8 @@
-package study.datajpa.feature.member.repository;
+package study.datajpa.feature.team.repository;
 
 
 import org.springframework.stereotype.Repository;
-import study.datajpa.feature.member.entity.Team;
+import study.datajpa.feature.team.entity.Team;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;

@@ -9,7 +9,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.test.annotation.Rollback;
 import study.datajpa.feature.member.dto.MemberDto;
 import study.datajpa.feature.member.entity.Member;
-import study.datajpa.feature.member.entity.Team;
+import study.datajpa.feature.team.entity.Team;
+import study.datajpa.feature.team.repository.TeamRepository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;

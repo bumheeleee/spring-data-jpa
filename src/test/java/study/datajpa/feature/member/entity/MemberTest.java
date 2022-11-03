@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import study.datajpa.feature.member.repository.MemberJpaRepository;
+import study.datajpa.feature.team.entity.Team;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;

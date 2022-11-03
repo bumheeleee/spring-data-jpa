@@ -1,6 +1,7 @@
-package study.datajpa.feature.member.entity;
+package study.datajpa.feature.team.entity;
 
 import lombok.*;
+import study.datajpa.feature.member.entity.Member;
 
 import javax.persistence.*;
 import java.util.ArrayList;
