@@ -17,13 +17,10 @@ import java.util.List;
 @Transactional
 @Rollback(value = false)
 class MemberTest {
-
     @PersistenceContext
     public EntityManager em;
-
     @Autowired
     public MemberJpaRepository memberJpaRepository;
-
     @Test
     public void testMember(){
         Team teamA = new Team("teamA");
@@ -84,5 +81,28 @@ class MemberTest {
             System.out.println("string = " + string);
         }
     }
+
+    @Test
+    public void JpaEventBaseEntityTest() throws Exception{
+        //given
+        Member m1 = new Member("m1");
+        memberJpaRepository.save(m1); // @PrePersist가 일어난다.
+
+        Thread.sleep(10000);
+        m1.setUsername("m2");
+
+        em.flush(); //@PreUpdate
+        em.clear();
+
+        //when
+        Member findMember = memberJpaRepository.find(m1.getId());
+
+        //then
+        System.out.println("findMember.getCreateDate() = " + findMember.getCreatedDate());
+        System.out.println("findMember.getUpdateDate() = " + findMember.getLastModifiedDate());
+        System.out.println("findMember.getCreateBy() = " + findMember.getCreateBy());
+        System.out.println("findMember.getLastModifiedBy() = " + findMember.getLastModifiedBy());
+    }
+
 
 }
