@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import study.datajpa.feature.member.repository.MemberJpaRepository;
+import study.datajpa.feature.member.repository.MemberRepository;
 import study.datajpa.feature.team.entity.Team;
 
 import javax.persistence.EntityManager;
@@ -21,6 +22,9 @@ class MemberTest {
     public EntityManager em;
     @Autowired
     public MemberJpaRepository memberJpaRepository;
+
+    @Autowired
+    public MemberRepository memberRepository;
     @Test
     public void testMember(){
         Team teamA = new Team("teamA");
@@ -102,7 +106,21 @@ class MemberTest {
         System.out.println("findMember.getUpdateDate() = " + findMember.getLastModifiedDate());
 //        System.out.println("findMember.getCreateBy() = " + findMember.getCreateBy());
 //        System.out.println("findMember.getLastModifiedBy() = " + findMember.getLastModifiedBy());
+
+
     }
 
+    @Test
+    public void 트랜잭션없이_save_delete_동작가능(){
+        //JpaRepository 사용한 경우
+        Member lee = memberRepository.save(new Member("lee1212"));
+        memberRepository.delete(lee);
+    }
 
+    @Test
+    public void 트랜잭션없이_save_delete_동작_불가능(){
+        //JpaRepository 사용 안한 경우
+        Member lee = memberJpaRepository.save(new Member("lee1212"));
+        memberJpaRepository.delete(lee);
+    }
 }
