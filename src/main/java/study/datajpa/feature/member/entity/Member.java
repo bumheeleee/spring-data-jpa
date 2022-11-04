@@ -2,7 +2,6 @@ package study.datajpa.feature.member.entity;
 
 import lombok.*;
 import study.datajpa.feature.jpa.entity.BaseEntity;
-import study.datajpa.feature.jpa.entity.JpaBaseEntity;
 import study.datajpa.feature.team.entity.Team;
 
 import javax.persistence.*;

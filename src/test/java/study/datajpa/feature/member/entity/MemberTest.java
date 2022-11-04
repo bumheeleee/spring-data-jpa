@@ -88,7 +88,7 @@ class MemberTest {
         Member m1 = new Member("m1");
         memberJpaRepository.save(m1); // @PrePersist가 일어난다.
 
-        Thread.sleep(10000);
+        Thread.sleep(1000);
         m1.setUsername("m2");
 
         em.flush(); //@PreUpdate
@@ -100,8 +100,8 @@ class MemberTest {
         //then
         System.out.println("findMember.getCreateDate() = " + findMember.getCreatedDate());
         System.out.println("findMember.getUpdateDate() = " + findMember.getLastModifiedDate());
-        System.out.println("findMember.getCreateBy() = " + findMember.getCreateBy());
-        System.out.println("findMember.getLastModifiedBy() = " + findMember.getLastModifiedBy());
+//        System.out.println("findMember.getCreateBy() = " + findMember.getCreateBy());
+//        System.out.println("findMember.getLastModifiedBy() = " + findMember.getLastModifiedBy());
     }
 
 
